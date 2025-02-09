@@ -1,7 +1,25 @@
-<html>
-  <body>
-    <head>
-      <title>КУРСАЧ СУКАЧ</title>
-    </head>
-  </body>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Три в ряд</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game">
+        <div class="score">Очки: <span id="score">0</span></div>
+        <div class="game-field" id="gameField">
+            <!-- Блоки будут генерироваться динамически -->
+        </div>
+        <div class="controls">
+            <button id="up">Вверх</button>
+            <button id="down">Вниз</button>
+            <button id="left">Влево</button>
+            <button id="right">Вправо</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
