@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | EventHub</title>
+  <link rel="stylesheet" href="/styles/style-app.css">
+  <link rel="icon" href="/images/icon.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container container">
+      <div class="logo">
+        <span><a href="http://localhost:3000"><img src="/images/icon.png" alt="Иконка EventHub" width="40" height="40"></a></span>
+        <span>EventHub</span>
+      </div>
+      <div class="nav-links">
+          <a href="/app" class="nav-link">Главная</a>
+          <a href="/events" class="nav-link">Мои мероприятия</a>
+          <a href="/auth/logout" class="nav-link">Выйти (<%= user.username %>)</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="event-header">
+      <% if (event.coverImage) { %>
+        <img src="<%= event.coverImage %>" alt="<%= event.title %>" class="event-cover-large">
+      <% } %>
+      <h1><%= event.title %></h1>
+      <p class="event-meta">
+        <%= new Date(event.date).toLocaleDateString() %> в <%= event.time %> | 
+        <%= event.location %>
+      </p>
+    </div>
+
+    <div class="event-content">
+      <h2>Описание</h2>
+      <p><%= event.description %></p>
+
+      <h2>Участники (<%= event.participants.length %>)</h2>
+      <% if (event.participants.length > 0) { %>
+        <ul class="participants-list">
+          <% event.participants.forEach(function(participant) { %>
+            <li><%= participant.username %></li>
+          <% }); %>
+        </ul>
+      <% } else { %>
+        <p>Пока нет участников</p>
+      <% } %>
+    </div>
+
+    <div class="event-actions">
+      <% if (event.organizer._id.toString() === user._id.toString()) { %>
+        <a href="/participants/<%= event._id %>" class="btn btn-primary">Список участников</a>
+      <% } %>
+      <a href="/events/<%= event._id %>/edit" class="btn btn-primary">Редактировать</a>
+      <form action="/events/<%= event._id %>?_method=DELETE" method="POST" class="inline-form">
+        <button type="submit" class="btn btn-danger">Удалить</button>
+      </form>
+      <a href="/events" class="btn btn-outline">Назад к списку</a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container text-center py-4">
+      <p>© 2025 EventHub.</p>
+    </div>
+  </footer>
+</body>
+</html>

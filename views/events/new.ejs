@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Новое мероприятие | EventHub</title>
+  <link rel="stylesheet" href="/styles/style-app.css">
+  <link rel="icon" href="/images/icon.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container container">
+      <div class="logo">
+        <span><a href="http://localhost:3000"><img src="/images/icon.png" alt="Иконка EventHub" width="40" height="40"></a></span>
+        <span>EventHub</span>
+      </div>
+      <div class="nav-links">
+          <a href="/app" class="nav-link">Главная</a>
+          <a href="/events" class="nav-link">Мои мероприятия</a>
+          <a href="/auth/logout" class="nav-link">Выйти (<%= user.username %>)</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h1 class="text-2xl font-bold mb-5">Создать новое мероприятие</h1>
+    
+    <% if (messages.error) { %>
+      <div class="alert alert-error mb-4"><%= messages.error %></div>
+    <% } %>
+
+    <form action="/events" method="POST" class="max-w-2xl">
+      <div class="form-group mb-4">
+        <label for="title" class="block mb-2 font-medium">Название мероприятия</label>
+        <input type="text" id="title" name="title" required 
+               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+
+      <div class="form-group mb-4">
+        <label for="description" class="block mb-2 font-medium">Описание</label>
+        <textarea id="description" name="description" required rows="5"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="form-group">
+          <label for="startDate" class="block mb-2 font-medium">Дата начала</label>
+          <input type="date" id="startDate" name="startDate" required
+                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+      
+        <div class="form-group">
+          <label for="startTime" class="block mb-2 font-medium">Время начала</label>
+          <input type="time" id="startTime" name="startTime" required
+                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="form-group">
+          <label for="endDate" class="block mb-2 font-medium">Дата окончания</label>
+          <input type="date" id="endDate" name="endDate" required
+                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+      
+        <div class="form-group">
+          <label for="endTime" class="block mb-2 font-medium">Время окончания</label>
+          <input type="time" id="endTime" name="endTime" required
+                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+      </div>
+
+      <div class="form-group mb-4">
+        <label class="block mb-2 font-medium">Формат мероприятия</label>
+        <div class="flex gap-4">
+          <label class="inline-flex items-center">
+            <input type="radio" name="format" value="online" checked class="form-radio" onchange="toggleFormatFields()">
+            <span class="ml-2">Онлайн</span>
+          </label>
+          <label class="inline-flex items-center">
+            <input type="radio" name="format" value="offline" class="form-radio" onchange="toggleFormatFields()">
+            <span class="ml-2">Оффлайн</span>
+          </label>
+        </div>
+      </div>
+      
+      <div id="onlineFields" class="form-group mb-4">
+        <label for="onlineLink" class="block mb-2 font-medium">Ссылка на онлайн-мероприятие</label>
+        <input type="url" id="onlineLink" name="onlineLink" class="w-full px-4 py-2 border rounded-lg">
+      </div>
+      
+      <div id="offlineFields" class="form-group mb-4 hidden">
+        <label for="location" class="block mb-2 font-medium">Адрес проведения</label>
+        <input type="text" id="location" name="location" class="w-full px-4 py-2 border rounded-lg">
+      </div>
+      
+      <div class="form-group mb-4">
+        <label for="maxParticipants" class="block mb-2 font-medium">Макс. участников (оставьте пустым, если без ограничений)</label>
+        <input type="number" id="maxParticipants" name="maxParticipants" min="1" class="w-full px-4 py-2 border rounded-lg">
+      </div>
+
+      <div class="flex justify-end gap-4">
+        <a href="/app" class="btn btn-outline">Отмена</a>
+        <button type="submit" class="btn btn-primary">Создать мероприятие</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function toggleFormatFields() {
+      const format = document.querySelector('input[name="format"]:checked').value;
+      document.getElementById('onlineFields').classList.toggle('hidden', format !== 'online');
+      document.getElementById('offlineFields').classList.toggle('hidden', format !== 'offline');
+    }
+    // Инициализация при загрузке
+    document.addEventListener('DOMContentLoaded', toggleFormatFields);
+  </script>
+
+  <footer class="footer mt-5">
+    <div class="container text-center py-4">
+      <p>© 2025 EventHub.</p>
+    </div>
+  </footer>
+</body>
+</html>
