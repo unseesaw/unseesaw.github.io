@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мои мероприятия</title>
+  <link rel="stylesheet" href="/styles/style-app.css">
+  <link rel="icon" href="/images/icon.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container container">
+      <div class="logo">
+        <span><a href="/app"><img src="/images/icon.png" alt="Иконка EventHub" width="40" height="40"></a></span>
+        <span>EventHub</span>
+      </div>
+      <div class="nav-links">
+        <a href="/app" class="nav-link">Главная</a>
+        <a href="/events" class="nav-link">Мои мероприятия</a>
+        <a href="/auth/logout" class="nav-link">Выйти (<%= user.username %>)</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5 mb-5">
+    <div class="flex justify-between items-center mb-5">
+      <h1 class="text-2xl font-bold"><%= title %></h1>
+      <a href="/events/new" class="btn btn-primary">Создать</a>
+    </div>
+
+    <% if (events.length === 0) { %>
+      <div class="p-4 text-center">
+        <p>У вас пока нет мероприятий</p>
+      </div>
+    <% } else { %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% events.forEach(event => { %>
+          <% if (event.organizer._id.toString() === user._id.toString()) { %>
+            <div class="card fade-in">
+              <div class="card-body">
+                <div class="flex justify-between items-start">
+                  <h2 class="font-bold text-lg"><%= event.title %></h2>
+                  <span class="event-status status-<%= event.status %>">
+                    <% if (event.status === 'upcoming') { %>Не началось<% } %>
+                    <% if (event.status === 'ongoing') { %>В процессе<% } %>
+                    <% if (event.status === 'completed') { %>Завершено<% } %>
+                  </span>
+                </div>
+                <p class="text-gray-600 mt-2">
+                  <%= new Date(event.startDate).toLocaleDateString('ru-RU') %> в <%= event.startTime %>
+                  — <%= new Date(event.endDate).toLocaleDateString('ru-RU') %> в <%= event.endTime %>
+                </p>
+                <p class="mt-2"><%= event.description.substring(0, 150) %></p>
+                <p class="mt-2">
+                  <strong>Участников:</strong> 
+                  <%= event.participants.length %><% if (event.maxParticipants) { %>/<%= event.maxParticipants %><% } %>
+                </p>
+              </div>
+              <div class="card-footer">
+                <a href="/events/<%= event._id %>" class="btn btn-outline">Подробнее</a>
+                  <a href="/events/<%= event._id %>/edit" class="btn btn-outline">Редактировать</a>
+                  <form action="/events/<%= event._id %>?_method=DELETE" method="POST" class="inline">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                  </form>
+              </div>
+            </div>
+          <% } %>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+
+  <footer class="footer mt-5">
+    <div class="container text-center py-4">
+      <p>2025 EventHub.</p>
+    </div>
+  </footer>
+</body>
+</html>
